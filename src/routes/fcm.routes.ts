@@ -34,7 +34,12 @@ router.post("/topic", async (req: Request, res: Response) => {
       return res.status(400).json({ message: "Missing required fields" });
     }
 
-    const response = await FCMService.sendToTopic(topic, title, description, data || {});
+    const response = await FCMService.sendToTopic(
+      topic,
+      title,
+      description,
+      data || {}
+    );
     res.json({ message: `Notification sent to topic '${topic}'`, response });
   } catch (error: any) {
     res.status(500).json({ message: error.message });

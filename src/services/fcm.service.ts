@@ -31,10 +31,10 @@ export class FCMService {
 
     try {
       const response = await admin.messaging().send(message);
-      console.log("✅ Notification sent:", response);
+      console.log(" Notification sent:", response);
       return response;
     } catch (error) {
-      console.error("❌ FCM send error:", error);
+      console.error("FCM send error:", error);
       throw error;
     }
   }
@@ -59,10 +59,10 @@ export class FCMService {
 
     try {
       const response = await admin.messaging().send(message);
-      console.log(`📢 Notification sent to topic '${topic}':`, response);
+      console.log(`Notification sent to topic '${topic}':`, response);
       return response;
     } catch (error) {
-      console.error("❌ Topic send error:", error);
+      console.error("Topic send error:", error);
       throw error;
     }
   }

@@ -7,7 +7,7 @@ app.use(express.json());
 app.use("/api/fcm", fcmRoutes);
 
 app.get("/", (_req, res) => {
-  res.send("FCM Notification Service Running");
+  res.send("🚀 FCM Notification Service Running");
 });
 
 export default app;
