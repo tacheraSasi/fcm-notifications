@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FCM Test Interface</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .endpoint {
+            background: #f8f9fa;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border-left: 4px solid #007acc;
+        }
+        .method {
+            font-weight: bold;
+            color: #007acc;
+        }
+        .mock {
+            border-left-color: #28a745;
+        }
+        .mock .method {
+            color: #28a745;
+        }
+        button {
+            background: #007acc;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #005a9e;
+        }
+        .mock-btn {
+            background: #28a745;
+        }
+        .mock-btn:hover {
+            background: #1e7e34;
+        }
+        textarea, input {
+            width: 100%;
+            margin: 5px 0;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .response {
+            background: #f1f3f4;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+        .success {
+            border-left: 4px solid #28a745;
+        }
+        .error {
+            border-left: 4px solid #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔔 FCM Notification Test Interface</h1>
+    
+    <div class="container">
+        <h2>Service Status</h2>
+        <button onclick="checkHealth()">Check Service Health</button>
+        <div id="health-response" class="response" style="display: none;"></div>
+    </div>
+
+    <div class="container">
+        <h2>Quick Test (Mock - No FCM Required)</h2>
+        <p>These endpoints simulate notifications without requiring FCM setup:</p>
+        
+        <div class="endpoint mock">
+            <div class="method">POST</div>
+            <strong>/api/fcm/test/mock-send</strong>
+            <p>Test individual notification (mock)</p>
+            <input type="text" id="mock-token" placeholder="Enter any test token (e.g., 'test-token-123')" value="test-token-123">
+            <button class="mock-btn" onclick="testMockSend()">Send Mock Notification</button>
+        </div>
+
+        <div class="endpoint mock">
+            <div class="method">POST</div>
+            <strong>/api/fcm/test/mock-topic</strong>
+            <p>Test topic notification (mock)</p>
+            <input type="text" id="mock-topic" placeholder="Enter topic name (e.g., 'all-users')" value="test-topic">
+            <button class="mock-btn" onclick="testMockTopic()">Send Mock Topic Notification</button>
+        </div>
+
+        <div id="mock-response" class="response" style="display: none;"></div>
+    </div>
+
+    <div class="container">
+        <h2>Real FCM Tests (Requires Valid Tokens)</h2>
+        <p>These endpoints send actual FCM notifications:</p>
+        
+        <div class="endpoint">
+            <div class="method">POST</div>
+            <strong>/api/fcm/test/send</strong>
+            <p>Send real test notification</p>
+            <input type="text" id="real-token" placeholder="Enter valid FCM token">
+            <button onclick="testRealSend()">Send Real Notification</button>
+        </div>
+
+        <div class="endpoint">
+            <div class="method">POST</div>
+            <strong>/api/fcm/test/topic</strong>
+            <p>Send real topic notification</p>
+            <input type="text" id="real-topic" placeholder="Enter topic name">
+            <button onclick="testRealTopic()">Send Real Topic Notification</button>
+        </div>
+
+        <div id="real-response" class="response" style="display: none;"></div>
+    </div>
+
+    <div class="container">
+        <h2>Advanced Tests</h2>
+        
+        <div class="endpoint">
+            <div class="method">POST</div>
+            <strong>/api/test/notification-types</strong>
+            <p>Test different notification types</p>
+            <input type="text" id="type-token" placeholder="Enter FCM token">
+            <select id="notification-type">
+                <option value="info">Info</option>
+                <option value="warning">Warning</option>
+                <option value="error">Error</option>
+                <option value="success">Success</option>
+                <option value="urgent">Urgent</option>
+            </select>
+            <button onclick="testNotificationType()">Send Typed Notification</button>
+        </div>
+
+        <div class="endpoint">
+            <div class="method">POST</div>
+            <strong>/api/test/validate-token</strong>
+            <p>Validate FCM token format</p>
+            <input type="text" id="validate-token" placeholder="Enter token to validate">
+            <button onclick="validateToken()">Validate Token</button>
+        </div>
+
+        <div id="advanced-response" class="response" style="display: none;"></div>
+    </div>
+
+    <div class="container">
+        <h2>API Documentation</h2>
+        <button onclick="getExamples()">Get API Examples</button>
+        <div id="examples-response" class="response" style="display: none;"></div>
+    </div>
+
+    <script>
+        const API_BASE = window.location.origin;
+
+        async function makeRequest(endpoint, method = 'GET', body = null) {
+            try {
+                const options = {
+                    method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                };
+                
+                if (body) {
+                    options.body = JSON.stringify(body);
+                }
+
+                const response = await fetch(`${API_BASE}${endpoint}`, options);
+                const data = await response.json();
+                
+                return {
+                    success: response.ok,
+                    status: response.status,
+                    data
+                };
+            } catch (error) {
+                return {
+                    success: false,
+                    status: 0,
+                    data: { message: error.message }
+                };
+            }
+        }
+
+        function displayResponse(elementId, response) {
+            const element = document.getElementById(elementId);
+            element.style.display = 'block';
+            element.className = `response ${response.success ? 'success' : 'error'}`;
+            element.textContent = JSON.stringify(response.data, null, 2);
+        }
+
+        async function checkHealth() {
+            const response = await makeRequest('/api/test/health');
+            displayResponse('health-response', response);
+        }
+
+        async function testMockSend() {
+            const token = document.getElementById('mock-token').value;
+            if (!token) {
+                alert('Please enter a token');
+                return;
+            }
+            
+            const response = await makeRequest('/api/fcm/test/mock-send', 'POST', { token });
+            displayResponse('mock-response', response);
+        }
+
+        async function testMockTopic() {
+            const topic = document.getElementById('mock-topic').value;
+            if (!topic) {
+                alert('Please enter a topic');
+                return;
+            }
+            
+            const response = await makeRequest('/api/fcm/test/mock-topic', 'POST', { topic });
+            displayResponse('mock-response', response);
+        }
+
+        async function testRealSend() {
+            const token = document.getElementById('real-token').value;
+            if (!token) {
+                alert('Please enter a valid FCM token');
+                return;
+            }
+            
+            const response = await makeRequest('/api/fcm/test/send', 'POST', { token });
+            displayResponse('real-response', response);
+        }
+
+        async function testRealTopic() {
+            const topic = document.getElementById('real-topic').value;
+            if (!topic) {
+                alert('Please enter a topic name');
+                return;
+            }
+            
+            const response = await makeRequest('/api/fcm/test/topic', 'POST', { topic });
+            displayResponse('real-response', response);
+        }
+
+        async function testNotificationType() {
+            const token = document.getElementById('type-token').value;
+            const type = document.getElementById('notification-type').value;
+            
+            if (!token) {
+                alert('Please enter a valid FCM token');
+                return;
+            }
+            
+            const response = await makeRequest('/api/test/notification-types', 'POST', { token, type });
+            displayResponse('advanced-response', response);
+        }
+
+        async function validateToken() {
+            const token = document.getElementById('validate-token').value;
+            if (!token) {
+                alert('Please enter a token to validate');
+                return;
+            }
+            
+            const response = await makeRequest('/api/test/validate-token', 'POST', { token });
+            displayResponse('advanced-response', response);
+        }
+
+        async function getExamples() {
+            const response = await makeRequest('/api/fcm/examples');
+            displayResponse('examples-response', response);
+        }
+
+        // Check health on page load
+        window.onload = () => {
+            checkHealth();
+        };
+    </script>
+</body>
+</html>
