@@ -1,7 +1,7 @@
 import admin from "../config/firebase.js";
 
 export interface NotificationPayload {
-  token: string; // Single device token
+  token: string;
   id: number;
   type: number;
   title: string;
