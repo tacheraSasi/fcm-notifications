@@ -1,0 +1,21 @@
+{
+    "name": "fcm-backend",
+    "version": "1.0.0",
+    "description": "TypeScript-based Firebase Cloud Messaging backend",
+    "main": "dist/server.js",
+    "type": "module",
+    "scripts": {
+        "dev": "ts-node-dev --respawn src/server.ts",
+        "build": "tsc",
+        "start": "node dist/server.js"
+    },
+    "dependencies": {
+        "express": "^4.18.2",
+        "firebase-admin": "^12.0.0"
+    },
+    "devDependencies": {
+        "@types/express": "^4.17.21",
+        "ts-node-dev": "^2.0.0",
+        "typescript": "^5.4.0"
+    }
+}
