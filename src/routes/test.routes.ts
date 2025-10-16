@@ -3,6 +3,9 @@ import { FCMService, NotificationPayload } from "../services/fcm.service.js";
 
 const router = Router();
 
+// Get token from environment variable
+const DEFAULT_TOKEN = process.env.TOKEN || "your_token_here";
+
 /**
  * @route POST /api/test/bulk-send
  * Send multiple notifications to different tokens (for load testing)
@@ -10,21 +13,13 @@ const router = Router();
 router.post("/bulk-send", async (req: Request, res: Response) => {
   try {
     const {
-      tokens,
+      count = 3,
       title = "Bulk Test",
       description = "Bulk notification test",
     } = req.body;
 
-    if (!tokens || !Array.isArray(tokens) || tokens.length === 0) {
-      return res.status(400).json({
-        message: "Missing tokens array",
-        example: {
-          tokens: ["token1", "token2", "token3"],
-          title: "Optional title",
-          description: "Optional description",
-        },
-      });
-    }
+    // Use the default token from env for all bulk notifications
+    const tokens = Array(count).fill(DEFAULT_TOKEN);
 
     const results = [];
     const errors = [];
@@ -69,23 +64,13 @@ router.post("/bulk-send", async (req: Request, res: Response) => {
 router.post("/scheduled-notification", async (req: Request, res: Response) => {
   try {
     const {
-      token,
       delaySeconds = 5,
       title = "Scheduled Test",
       description = "This notification was delayed",
     } = req.body;
 
-    if (!token) {
-      return res.status(400).json({
-        message: "Missing FCM token",
-        example: {
-          token: "your-fcm-token",
-          delaySeconds: 5,
-          title: "Optional title",
-          description: "Optional description",
-        },
-      });
-    }
+    // Use token from environment variable
+    const token = DEFAULT_TOKEN;
 
     const delay = Math.max(1, Math.min(60, delaySeconds)); // Clamp between 1-60 seconds
 
