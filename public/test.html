@@ -85,8 +85,9 @@
     <div class="container">
       <h2>Service Status</h2>
       <button onclick="checkHealth()">Check Service Health</button>
+      <button onclick="checkTokenInfo()">Check Token Info</button>
       <div id="health-response" class="response" style="display: none"></div>
-    </div>
+    </div></container>
 
     <div class="container">
       <h2>Quick Test (Mock - No FCM Required)</h2>
@@ -224,7 +225,11 @@
       }
 
       async function testMockSend() {
-        const response = await makeRequest("/api/fcm/test/mock-send", "POST", {});
+        const response = await makeRequest(
+          "/api/fcm/test/mock-send",
+          "POST",
+          {}
+        );
         displayResponse("mock-response", response);
       }
 
@@ -271,7 +276,11 @@
       }
 
       async function validateToken() {
-        const response = await makeRequest("/api/test/validate-token", "POST", {});
+        const response = await makeRequest(
+          "/api/test/validate-token",
+          "POST",
+          {}
+        );
         displayResponse("advanced-response", response);
       }
 

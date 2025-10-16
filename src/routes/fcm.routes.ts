@@ -3,7 +3,6 @@ import { FCMService, NotificationPayload } from "../services/fcm.service.js";
 
 const router = Router();
 
-// Get token from environment variable
 const DEFAULT_TOKEN = process.env.TOKEN || "your_token_here";
 
 /**
