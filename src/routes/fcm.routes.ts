@@ -51,8 +51,8 @@ router.post("/topic", async (req: Request, res: Response) => {
  * Test endpoint to verify the FCM service is working
  */
 router.get("/test", (req: Request, res: Response) => {
-  res.json({ 
-    message: "FCM service is running", 
+  res.json({
+    message: "FCM service is running",
     timestamp: new Date().toISOString(),
     endpoints: {
       send: "POST /api/fcm/send",
@@ -60,8 +60,8 @@ router.get("/test", (req: Request, res: Response) => {
       testSend: "POST /api/fcm/test/send",
       testTopic: "POST /api/fcm/test/topic",
       mockSend: "POST /api/fcm/test/mock-send",
-      mockTopic: "POST /api/fcm/test/mock-topic"
-    }
+      mockTopic: "POST /api/fcm/test/mock-topic",
+    },
   });
 });
 
@@ -72,13 +72,13 @@ router.get("/test", (req: Request, res: Response) => {
 router.post("/test/send", async (req: Request, res: Response) => {
   try {
     const { token } = req.body;
-    
+
     if (!token) {
-      return res.status(400).json({ 
+      return res.status(400).json({
         message: "Missing FCM token",
         example: {
-          token: "your-fcm-token-here"
-        }
+          token: "your-fcm-token-here",
+        },
       });
     }
 
@@ -89,14 +89,14 @@ router.post("/test/send", async (req: Request, res: Response) => {
       title: "Test Notification",
       description: "This is a test notification from your FCM backend!",
       read: false,
-      issuedDate: new Date().toISOString()
+      issuedDate: new Date().toISOString(),
     };
 
     const response = await FCMService.sendNotification(testPayload);
-    res.json({ 
-      message: "Test notification sent successfully", 
+    res.json({
+      message: "Test notification sent successfully",
       payload: testPayload,
-      response 
+      response,
     });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
@@ -110,13 +110,13 @@ router.post("/test/send", async (req: Request, res: Response) => {
 router.post("/test/topic", async (req: Request, res: Response) => {
   try {
     const { topic } = req.body;
-    
+
     if (!topic) {
-      return res.status(400).json({ 
+      return res.status(400).json({
         message: "Missing topic name",
         example: {
-          topic: "all-users"
-        }
+          topic: "all-users",
+        },
       });
     }
 
@@ -127,13 +127,13 @@ router.post("/test/topic", async (req: Request, res: Response) => {
       {
         testId: "12345",
         timestamp: new Date().toISOString(),
-        priority: "high"
+        priority: "high",
       }
     );
-    
-    res.json({ 
-      message: `Test notification sent to topic '${topic}'`, 
-      response 
+
+    res.json({
+      message: `Test notification sent to topic '${topic}'`,
+      response,
     });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
@@ -146,13 +146,13 @@ router.post("/test/topic", async (req: Request, res: Response) => {
  */
 router.post("/test/mock-send", (req: Request, res: Response) => {
   const { token } = req.body;
-  
+
   if (!token) {
-    return res.status(400).json({ 
+    return res.status(400).json({
       message: "Missing FCM token",
       example: {
-        token: "your-fcm-token-here"
-      }
+        token: "your-fcm-token-here",
+      },
     });
   }
 
@@ -163,17 +163,17 @@ router.post("/test/mock-send", (req: Request, res: Response) => {
     title: "Mock Test Notification",
     description: "This is a mock notification (not actually sent via FCM)",
     read: false,
-    issuedDate: new Date().toISOString()
+    issuedDate: new Date().toISOString(),
   };
 
   // Simulate FCM response
   const mockResponse = `projects/your-project/messages/${Date.now()}`;
-  
-  res.json({ 
-    message: "Mock notification processed successfully (not sent)", 
+
+  res.json({
+    message: "Mock notification processed successfully (not sent)",
     payload: mockPayload,
     mockResponse,
-    note: "This is a mock response - no actual FCM notification was sent"
+    note: "This is a mock response - no actual FCM notification was sent",
   });
 });
 
@@ -183,19 +183,19 @@ router.post("/test/mock-send", (req: Request, res: Response) => {
  */
 router.post("/test/mock-topic", (req: Request, res: Response) => {
   const { topic } = req.body;
-  
+
   if (!topic) {
-    return res.status(400).json({ 
+    return res.status(400).json({
       message: "Missing topic name",
       example: {
-        topic: "all-users"
-      }
+        topic: "all-users",
+      },
     });
   }
 
   const mockResponse = `projects/your-project/messages/${Date.now()}`;
-  
-  res.json({ 
+
+  res.json({
     message: `Mock notification processed for topic '${topic}' (not sent)`,
     topic,
     title: "Mock Topic Notification",
@@ -203,10 +203,10 @@ router.post("/test/mock-topic", (req: Request, res: Response) => {
     data: {
       testId: Math.floor(Math.random() * 10000).toString(),
       timestamp: new Date().toISOString(),
-      priority: "normal"
+      priority: "normal",
     },
     mockResponse,
-    note: "This is a mock response - no actual FCM notification was sent"
+    note: "This is a mock response - no actual FCM notification was sent",
   });
 });
 
@@ -227,8 +227,8 @@ router.get("/examples", (req: Request, res: Response) => {
           title: "Hello World",
           description: "This is your first notification!",
           read: false,
-          issuedDate: new Date().toISOString()
-        }
+          issuedDate: new Date().toISOString(),
+        },
       },
       topicNotification: {
         endpoint: "POST /api/fcm/topic",
@@ -238,22 +238,22 @@ router.get("/examples", (req: Request, res: Response) => {
           description: "We have some exciting news to share!",
           data: {
             updateId: "123",
-            priority: "high"
-          }
-        }
+            priority: "high",
+          },
+        },
       },
       testNotification: {
         endpoint: "POST /api/fcm/test/send",
         payload: {
-          token: "your-fcm-device-token"
-        }
+          token: "your-fcm-device-token",
+        },
       },
       testTopicNotification: {
         endpoint: "POST /api/fcm/test/topic",
         payload: {
-          topic: "test-topic"
-        }
-      }
+          topic: "test-topic",
+        },
+      },
     },
     curlExamples: {
       testEndpoint: `curl -X GET http://localhost:3000/api/fcm/test`,
@@ -274,8 +274,8 @@ router.get("/examples", (req: Request, res: Response) => {
     "topic": "all-users",
     "title": "Broadcast",
     "description": "Message for everyone"
-  }'`
-    }
+  }'`,
+    },
   });
 });
 

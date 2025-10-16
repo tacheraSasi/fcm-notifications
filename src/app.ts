@@ -22,11 +22,11 @@ app.get("/", (_req, res) => {
       main: {
         health: "GET /",
         fcmTest: "GET /api/fcm/test",
-        examples: "GET /api/fcm/examples"
+        examples: "GET /api/fcm/examples",
       },
       notifications: {
         send: "POST /api/fcm/send",
-        topic: "POST /api/fcm/topic"
+        topic: "POST /api/fcm/topic",
       },
       testing: {
         testSend: "POST /api/fcm/test/send",
@@ -37,15 +37,15 @@ app.get("/", (_req, res) => {
         scheduled: "POST /api/test/scheduled-notification",
         types: "POST /api/test/notification-types",
         validateToken: "POST /api/test/validate-token",
-        health: "GET /api/test/health"
-      }
+        health: "GET /api/test/health",
+      },
     },
     quickStart: {
       testInterface: "GET /test.html (Interactive test page)",
       testService: "GET /api/fcm/test",
       mockNotification: "POST /api/fcm/test/mock-send",
-      examples: "GET /api/fcm/examples"
-    }
+      examples: "GET /api/fcm/examples",
+    },
   });
 });
 
