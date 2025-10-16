@@ -113,18 +113,10 @@ router.post("/scheduled-notification", async (req: Request, res: Response) => {
  */
 router.post("/notification-types", async (req: Request, res: Response) => {
   try {
-    const { token, type = "info" } = req.body;
+    const { type = "info" } = req.body;
 
-    if (!token) {
-      return res.status(400).json({
-        message: "Missing FCM token",
-        availableTypes: ["info", "warning", "error", "success", "urgent"],
-        example: {
-          token: "your-fcm-token",
-          type: "info",
-        },
-      });
-    }
+    // Use token from environment variable
+    const token = DEFAULT_TOKEN;
 
     const notificationTypes = {
       info: {
@@ -215,16 +207,8 @@ router.get("/health", (req: Request, res: Response) => {
  * Validate if an FCM token format is correct (basic validation)
  */
 router.post("/validate-token", (req: Request, res: Response) => {
-  const { token } = req.body;
-
-  if (!token) {
-    return res.status(400).json({
-      message: "Missing token to validate",
-      example: {
-        token: "your-fcm-token",
-      },
-    });
-  }
+  // Use token from environment variable
+  const token = DEFAULT_TOKEN;
 
   // Basic FCM token validation
   const isValidLength = token.length >= 140; // FCM tokens are typically 152+ characters

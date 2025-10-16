@@ -95,13 +95,7 @@
       <div class="endpoint mock">
         <div class="method">POST</div>
         <strong>/api/fcm/test/mock-send</strong>
-        <p>Test individual notification (mock)</p>
-        <input
-          type="text"
-          id="mock-token"
-          placeholder="Enter any test token (e.g., 'test-token-123')"
-          value="test-token-123"
-        />
+        <p>Test individual notification (mock) - Uses token from .env</p>
         <button class="mock-btn" onclick="testMockSend()">
           Send Mock Notification
         </button>
@@ -132,12 +126,7 @@
       <div class="endpoint">
         <div class="method">POST</div>
         <strong>/api/fcm/test/send</strong>
-        <p>Send real test notification</p>
-        <input
-          type="text"
-          id="real-token"
-          placeholder="Enter valid FCM token"
-        />
+        <p>Send real test notification - Uses token from .env</p>
         <button onclick="testRealSend()">Send Real Notification</button>
       </div>
 
@@ -158,8 +147,7 @@
       <div class="endpoint">
         <div class="method">POST</div>
         <strong>/api/test/notification-types</strong>
-        <p>Test different notification types</p>
-        <input type="text" id="type-token" placeholder="Enter FCM token" />
+        <p>Test different notification types - Uses token from .env</p>
         <select id="notification-type">
           <option value="info">Info</option>
           <option value="warning">Warning</option>
@@ -175,12 +163,7 @@
       <div class="endpoint">
         <div class="method">POST</div>
         <strong>/api/test/validate-token</strong>
-        <p>Validate FCM token format</p>
-        <input
-          type="text"
-          id="validate-token"
-          placeholder="Enter token to validate"
-        />
+        <p>Validate FCM token format - Uses token from .env</p>
         <button onclick="validateToken()">Validate Token</button>
       </div>
 
@@ -241,15 +224,7 @@
       }
 
       async function testMockSend() {
-        const token = document.getElementById("mock-token").value;
-        if (!token) {
-          alert("Please enter a token");
-          return;
-        }
-
-        const response = await makeRequest("/api/fcm/test/mock-send", "POST", {
-          token,
-        });
+        const response = await makeRequest("/api/fcm/test/mock-send", "POST", {});
         displayResponse("mock-response", response);
       }
 
@@ -267,15 +242,7 @@
       }
 
       async function testRealSend() {
-        const token = document.getElementById("real-token").value;
-        if (!token) {
-          alert("Please enter a valid FCM token");
-          return;
-        }
-
-        const response = await makeRequest("/api/fcm/test/send", "POST", {
-          token,
-        });
+        const response = await makeRequest("/api/fcm/test/send", "POST", {});
         displayResponse("real-response", response);
       }
 
@@ -293,32 +260,18 @@
       }
 
       async function testNotificationType() {
-        const token = document.getElementById("type-token").value;
         const type = document.getElementById("notification-type").value;
-
-        if (!token) {
-          alert("Please enter a valid FCM token");
-          return;
-        }
 
         const response = await makeRequest(
           "/api/test/notification-types",
           "POST",
-          { token, type }
+          { type }
         );
         displayResponse("advanced-response", response);
       }
 
       async function validateToken() {
-        const token = document.getElementById("validate-token").value;
-        if (!token) {
-          alert("Please enter a token to validate");
-          return;
-        }
-
-        const response = await makeRequest("/api/test/validate-token", "POST", {
-          token,
-        });
+        const response = await makeRequest("/api/test/validate-token", "POST", {});
         displayResponse("advanced-response", response);
       }
 

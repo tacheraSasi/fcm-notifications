@@ -3,6 +3,9 @@ import { FCMService, NotificationPayload } from "../services/fcm.service.js";
 
 const router = Router();
 
+// Get token from environment variable
+const DEFAULT_TOKEN = process.env.TOKEN || "your_token_here";
+
 /**
  * @route POST /api/fcm/send
  * Send a push notification to a specific device.
@@ -71,16 +74,8 @@ router.get("/test", (req: Request, res: Response) => {
  */
 router.post("/test/send", async (req: Request, res: Response) => {
   try {
-    const { token } = req.body;
-
-    if (!token) {
-      return res.status(400).json({
-        message: "Missing FCM token",
-        example: {
-          token: "your-fcm-token-here",
-        },
-      });
-    }
+    // Use token from environment variable
+    const token = DEFAULT_TOKEN;
 
     const testPayload: NotificationPayload = {
       token,
@@ -145,16 +140,8 @@ router.post("/test/topic", async (req: Request, res: Response) => {
  * Mock endpoint that simulates sending without actually using FCM (for testing)
  */
 router.post("/test/mock-send", (req: Request, res: Response) => {
-  const { token } = req.body;
-
-  if (!token) {
-    return res.status(400).json({
-      message: "Missing FCM token",
-      example: {
-        token: "your-fcm-token-here",
-      },
-    });
-  }
+  // Use token from environment variable
+  const token = DEFAULT_TOKEN;
 
   const mockPayload: NotificationPayload = {
     token,
