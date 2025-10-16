@@ -38,6 +38,7 @@ app.get("/", (_req, res) => {
         types: "POST /api/test/notification-types",
         validateToken: "POST /api/test/validate-token",
         health: "GET /api/test/health",
+        tokenInfo: "GET /api/test/token-info",
       },
     },
     quickStart: {
@@ -45,6 +46,11 @@ app.get("/", (_req, res) => {
       testService: "GET /api/fcm/test",
       mockNotification: "POST /api/fcm/test/mock-send",
       examples: "GET /api/fcm/examples",
+      tokenInfo: "GET /api/test/token-info",
+    },
+    setup: {
+      note: "Update TOKEN in .env file with your FCM token from mobile device",
+      tokenStatus: "Check /api/test/token-info for current token status",
     },
   });
 });

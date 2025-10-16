@@ -224,6 +224,11 @@
         displayResponse("health-response", response);
       }
 
+      async function checkTokenInfo() {
+        const response = await makeRequest("/api/test/token-info");
+        displayResponse("health-response", response);
+      }
+
       async function testMockSend() {
         const response = await makeRequest(
           "/api/fcm/test/mock-send",

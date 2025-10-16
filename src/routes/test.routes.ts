@@ -199,7 +199,10 @@ router.get("/health", (req: Request, res: Response) => {
     uptime: process.uptime(),
     version: "1.0.0",
     environment: process.env.NODE_ENV || "development",
-    tokenStatus: DEFAULT_TOKEN !== "your_token_here" ? "Token loaded from .env" : "Using default token (update .env)",
+    tokenStatus:
+      DEFAULT_TOKEN !== "your_token_here"
+        ? "Token loaded from .env"
+        : "Using default token (update .env)",
   });
 });
 
@@ -210,13 +213,17 @@ router.get("/health", (req: Request, res: Response) => {
 router.get("/token-info", (req: Request, res: Response) => {
   const token = DEFAULT_TOKEN;
   const isDefault = token === "your_token_here";
-  
+
   res.json({
     message: "Current token information",
     tokenSet: !isDefault,
-    tokenPreview: isDefault ? token : `${token.substring(0, 20)}...${token.substring(token.length - 10)}`,
+    tokenPreview: isDefault
+      ? token
+      : `${token.substring(0, 20)}...${token.substring(token.length - 10)}`,
     source: ".env TOKEN variable",
-    note: isDefault ? "Please update the TOKEN in your .env file with a real FCM token" : "Token loaded successfully from .env"
+    note: isDefault
+      ? "Please update the TOKEN in your .env file with a real FCM token"
+      : "Token loaded successfully from .env",
   });
 });
 
